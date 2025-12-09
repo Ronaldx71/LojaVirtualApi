@@ -16,5 +16,8 @@ data class Reactions(
 )
 
 data class PostResponse(
-    val posts: List<Post>
+    val limit: Int,
+    val posts: List<Post>,
+    val skip: Int,
+    val total: Int
 )

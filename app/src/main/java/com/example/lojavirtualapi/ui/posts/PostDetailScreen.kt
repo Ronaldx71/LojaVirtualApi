@@ -61,17 +61,6 @@ fun PostDetailScreen(
                 .padding(16.dp)
         ) {
 
-            /*IconButton(
-                onClick = onBackClick,
-                modifier = Modifier.align(Alignment.Start)
-            ) {
-                Icon(
-                    Icons.AutoMirrored.Filled.ArrowBack,
-                    contentDescription = "Voltar",
-                    tint = BLACK
-                )
-            }*/
-
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -122,14 +111,24 @@ fun PostDetailScreen(
                     )
                 }
             }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
             Text(
-                text = "Título: ${post.title}",
+                text = post.title,
                 style = MaterialTheme.typography.headlineSmall,
                 color = BLACK,
                 modifier = Modifier.padding(vertical = 4.dp)
             )
+
             Spacer(modifier = Modifier.height(8.dp))
-            Text("Corpo: ${post.body}")
+
+            Text(
+                text = post.body.replace("\n", "\n\n"),
+                style = MaterialTheme.typography.bodyMedium,
+                color = BLACK,
+                textAlign = TextAlign.Justify
+            )
 
             Spacer(modifier = Modifier.height(16.dp))
 
