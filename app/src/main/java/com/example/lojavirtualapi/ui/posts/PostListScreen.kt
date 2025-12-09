@@ -1,17 +1,11 @@
 package com.example.lojavirtualapi.ui.posts
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -26,6 +20,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.lojavirtualapi.api.RetrofitInstance
 import com.example.lojavirtualapi.model.Post
+import com.example.lojavirtualapi.ui.posts.material3expressive.MeuCard
 
 @Composable
 fun PostListScreen(
@@ -48,21 +43,19 @@ fun PostListScreen(
         return
     }
 
-    LazyColumn(modifier = Modifier.fillMaxSize().padding(16.dp)) {
+    LazyColumn(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp)
+    ) {
         items(list) { post ->
-
-            Card(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 12.dp)
-                    .clickable { nav.navigate("post/${post.id}")}
-            ) {
-                Column(modifier = Modifier.padding(16.dp)) {
-                    Text("Post ID: ${post.id}", style = MaterialTheme.typography.titleMedium)
-                    Text("Titulo: ${post.title}")
-                    Text("Corpo: ${post.body}")
-                }
-            }
+            MeuCard(
+                modifier = Modifier.padding(bottom = 12.dp),
+                onClick = { nav.navigate("post/${post.id}") },
+                postId = post.id,
+                title = post.title,
+                body = post.body
+            )
         }
     }
 
