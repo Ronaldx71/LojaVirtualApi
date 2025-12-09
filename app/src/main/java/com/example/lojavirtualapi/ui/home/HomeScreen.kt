@@ -1,6 +1,10 @@
 package com.example.lojavirtualapi.ui.home
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -8,6 +12,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.example.lojavirtualapi.ui.posts.material3expressive.CardHome
+import com.example.lojavirtualapi.ui.posts.material3expressive.MeuCard
 
 @Composable
 fun HomeScreen(nav: NavController) {
@@ -35,6 +41,11 @@ fun HomeScreen(nav: NavController) {
         Button(onClick = { nav.navigate("carts") }) {
             Text("Carrinhos")
         }
+
+        CardHome(
+            onClick = { nav.navigate("posts") },
+            title = "Postagem"
+        )
 
     }
 }
