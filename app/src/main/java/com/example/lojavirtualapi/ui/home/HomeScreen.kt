@@ -6,10 +6,14 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material3.Button
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.lojavirtualapi.ui.posts.material3expressive.CardHome
@@ -17,35 +21,45 @@ import com.example.lojavirtualapi.ui.posts.material3expressive.MeuCard
 
 @Composable
 fun HomeScreen(nav: NavController) {
-    Column(
-        modifier = Modifier.fillMaxSize().padding(24.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
+
+    Surface(
+        modifier = Modifier.fillMaxSize(),
+        color = Color.White
     ) {
-
-        Button(onClick = { nav.navigate("products") }) {
-            Text("Produtos")
+        LazyVerticalGrid(
+            columns = GridCells.Fixed(2),
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(top = 64.dp, start = 16.dp, end = 16.dp),
+            horizontalArrangement = Arrangement.spacedBy(16.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            items(4) { item ->
+                when (item){
+                    0 -> CardHome(
+                        onClick = { nav.navigate("products") },
+                        title = "Produtos"
+                    )
+                    1 -> CardHome(
+                        onClick = { nav.navigate("carts") },
+                        title = "Carrinho"
+                    )
+                    2 -> CardHome(
+                        onClick = { /* usuários depois */ },
+                        title = "Usuários"
+                    )
+                    3 -> CardHome(
+                        onClick = { nav.navigate("posts") },
+                        title = "Postagens"
+                    )
+                }
+            }
         }
-
-        Spacer(Modifier.height(16.dp))
-
-        Button(onClick = { /* carrinhos depois */ }) {
-            Text("Carrinhos")
-        }
-
-        Spacer(Modifier.height(16.dp))
-
-        Button(onClick = { /* usuários depois */ }) {
-            Text("Usuários")
-        }
-        Button(onClick = { nav.navigate("carts") }) {
-            Text("Carrinhos")
-        }
-
-        CardHome(
-            onClick = { nav.navigate("posts") },
-            title = "Postagem"
-        )
-
     }
+}
+
+@Preview
+@Composable
+private fun HomeScreenPreview(){
+    HomeScreen(nav = NavController(LocalContext.current))
 }
