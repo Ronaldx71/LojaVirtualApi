@@ -1,15 +1,21 @@
 package com.example.lojavirtualapi.ui.posts.material3expressive
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.danilloteles.appnetflixapi.ui.theme.BLACK
+import com.danilloteles.appnetflixapi.ui.theme.WHITE
 
 @Composable
 fun MeuCard(
@@ -24,14 +30,23 @@ fun MeuCard(
         modifier = modifier.fillMaxWidth()
     ) {
         Column(modifier = modifier.padding(16.dp)) {
-            Text(
-                text = "Post ID: $postId",
-                style = MaterialTheme.typography.titleMedium
-            )
+            Surface(
+                color = BLACK,
+                shape = RoundedCornerShape(12.dp)
+            ) {
+                Text(
+                    text = "ID: ${postId}",
+                    style = MaterialTheme.typography.titleMedium,
+                    color = WHITE,
+                    modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
+                )
+            }
+            Spacer(modifier = modifier.height(8.dp))
             Text(
                 text = "Título: $title",
                 style = MaterialTheme.typography.titleLarge
             )
+            Spacer(modifier = modifier.height(8.dp))
             Text(
                 text = "Corpo: $body",
                 style = MaterialTheme.typography.bodyMedium
