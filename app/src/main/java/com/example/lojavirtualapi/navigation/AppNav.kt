@@ -4,11 +4,16 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.example.lojavirtualapi.ui.users.UsersListScreen
+import com.example.lojavirtualapi.ui.users.UserDetailScreen
 import com.example.lojavirtualapi.ui.home.HomeScreen
 import com.example.lojavirtualapi.ui.products.ProductListScreen
 import com.example.lojavirtualapi.ui.products.ProductDetailScreen
 import com.example.lojavirtualapi.ui.carts.CartListScreen
 import com.example.lojavirtualapi.ui.carts.CartDetailScreen
+import com.example.lojavirtualapi.ui.posts.PostsListScreen
+import com.example.lojavirtualapi.ui.posts.PostDetailScreen
+
 
 @Composable
 fun AppNav(navController: NavHostController) {
@@ -36,5 +41,24 @@ fun AppNav(navController: NavHostController) {
             val id = backStack.arguments?.getString("id")!!.toInt()
             CartDetailScreen(id, navController)
         }
+        composable("users") { UsersListScreen(navController) }
+
+        composable("user/{id}") { backStack ->
+            val id = backStack.arguments?.getString("id")!!.toInt()
+            UserDetailScreen(id, navController)
+        }
+
+        composable("posts") {
+            PostsListScreen(navController)
+        }
+
+        composable("post/{id}") { backStack ->
+            val id = backStack.arguments?.getString("id")!!.toInt()
+            PostDetailScreen(id, navController)
+        }
+
+
+
     }
+
 }

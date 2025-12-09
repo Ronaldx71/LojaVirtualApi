@@ -1,0 +1,10 @@
+package com.example.lojavirtualapi.model
+
+data class Post(
+    val id: Int,
+    val title: String,
+    val body: String,
+    val userId: Int,
+    val tags: List<String>,
+    val reactions: Int
+)
