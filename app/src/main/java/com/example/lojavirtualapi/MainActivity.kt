@@ -17,12 +17,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             val nav = rememberNavController()
             MaterialTheme {
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = Color.White
-                ) {
-                    AppNav(nav)
-                }
+                AppNav(nav)
             }
         }
     }

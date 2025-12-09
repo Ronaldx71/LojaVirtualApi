@@ -3,6 +3,7 @@ package com.example.lojavirtualapi.ui.posts.material3expressive
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -11,9 +12,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowForward
-import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.KeyboardArrowRight
-import androidx.compose.material.icons.outlined.Send
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CardDefaults
@@ -28,6 +26,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.danilloteles.appnetflixapi.ui.theme.GRAY_300
+import com.danilloteles.appnetflixapi.ui.theme.GRAY_500
+import com.danilloteles.appnetflixapi.ui.theme.GRAY_700
+import com.danilloteles.appnetflixapi.ui.theme.GRAY_900
 
 @Composable
 fun CardHome(
@@ -38,7 +40,7 @@ fun CardHome(
     OutlinedCard(
         onClick = onClick,
         modifier = modifier.fillMaxWidth(),
-        border = BorderStroke(1.dp, Color.Black),
+        border = BorderStroke(1.dp, GRAY_500),
         colors = CardDefaults.outlinedCardColors(
             containerColor = Color.White
         )
@@ -56,29 +58,33 @@ fun CardHome(
                 textAlign = TextAlign.Start,
                 modifier = modifier.fillMaxWidth()
             )
-            Spacer(modifier = modifier.height(16.dp))
+            Spacer(modifier = modifier.height(24.dp))
             Row(
                 modifier = modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.End
             ) {
                 Button(
                     onClick = onClick,
-                    contentPadding = ButtonDefaults.ButtonWithIconContentPadding,
+                    contentPadding = PaddingValues(
+                        horizontal = 12.dp,
+                        vertical = 6.dp
+                    ),
                     colors = ButtonDefaults.buttonColors(
                         containerColor = Color.White,
                         contentColor = Color.Black
                     ),
-                    border = BorderStroke(1.dp, Color.Black)
+                    border = BorderStroke(1.dp, GRAY_300)
                 ) {
                     Text(
                         text = "Ver mais",
-                        color = Color.Black
+                        color = Color.Black,
+                        style = MaterialTheme.typography.bodySmall
                     )
-                    Spacer(Modifier.size(ButtonDefaults.IconSpacing))
+                    Spacer(Modifier.size(4.dp))
                     Icon(
                         Icons.Default.ArrowForward,
                         contentDescription = null,
-                        modifier = Modifier.size(ButtonDefaults.IconSize),
+                        modifier = Modifier.size(16.dp),
                         tint = Color.Black
                     )
                 }
