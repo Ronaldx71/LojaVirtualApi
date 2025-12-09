@@ -27,7 +27,8 @@ interface DummyApi {
     @GET("posts")
     suspend fun getPosts(
         @Query("limit") limit: Int = 30,
-        @Query("skip") skip: Int = 0
+        @Query("skip") skip: Int = 0,
+        @Query("q") query: String = ""
     ): PostResponse
 
     @GET("posts/{id}")

@@ -83,8 +83,8 @@ fun CardHome(
                     )
                     Spacer(Modifier.size(4.dp))
                     Icon(
-                        Icons.Default.ArrowForward,
-                        contentDescription = null,
+                        Icons.AutoMirrored.Filled.ArrowForward,
+                        contentDescription = "Ver mais detalhes",
                         modifier = Modifier.size(16.dp),
                         tint = Color.Black
                     )

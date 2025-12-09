@@ -4,10 +4,12 @@ import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.example.lojavirtualapi.api.DummyApi
 import com.example.lojavirtualapi.model.Post
+import com.example.lojavirtualapi.model.PostResponse
 
 class PostPagingSource(
     private val dummyApi: DummyApi,
-    private val query: String = ""
+    private val query: String,
+    private val onTotal: (Int) -> Unit
 ) : PagingSource<Int, Post>() {
 
     companion object {
@@ -16,21 +18,25 @@ class PostPagingSource(
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Post> {
         return try {
-            val skip = params.key ?: 0
+            val page = params.key ?: 0
 
-            val response = if (query.isEmpty()) {
-                dummyApi.getPosts(limit = PAGE_SIZE, skip = skip)
-            } else {
-                dummyApi.searchPosts(query = query, limit = PAGE_SIZE, skip = skip)
+            val response: PostResponse = dummyApi.getPosts(
+                skip = page * PAGE_SIZE,
+                limit = PAGE_SIZE,
+                query = query
+            )
+
+            if (page == 0) {
+                onTotal(response.total)
             }
 
             LoadResult.Page(
                 data = response.posts,
-                prevKey = if (skip == 0) null else skip - PAGE_SIZE,
-                nextKey = if (response.posts.isEmpty()) null else skip + PAGE_SIZE
+                prevKey = if (page == 0) null else page - 1,
+                nextKey = if (response.posts.isEmpty()) null else page + 1
             )
-        } catch (exception: Exception) {
-            LoadResult.Error(exception)
+        } catch (e: Exception) {
+            LoadResult.Error(e)
         }
     }
 

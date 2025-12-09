@@ -10,14 +10,23 @@ import kotlinx.coroutines.flow.Flow
 
 class PostRepository {
 
-    fun getPosts(query: String = ""): Flow<PagingData<Post>> {
+    fun getPosts(
+        query: String = "",
+        onTotal: (Int) -> Unit = {}
+    ): Flow<PagingData<Post>> {
         return Pager(
             config = PagingConfig(
                 pageSize = PostPagingSource.PAGE_SIZE,
                 prefetchDistance = 10,
                 enablePlaceholders = false
             ),
-            pagingSourceFactory = { PostPagingSource(RetrofitInstance.api, query) }
+            pagingSourceFactory = {
+                PostPagingSource(
+                    RetrofitInstance.api,
+                    query,
+                    onTotal
+                )
+            }
         ).flow
     }
 }

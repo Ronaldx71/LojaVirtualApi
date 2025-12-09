@@ -25,6 +25,7 @@ import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -54,6 +55,7 @@ fun PostListScreen(
 ) {
     var searchText by remember { mutableStateOf("") }
     val posts = viewModel.posts.collectAsLazyPagingItems()
+    val totalPosts by viewModel.totalPosts.collectAsState()
 
     LaunchedEffect(searchText) {
         delay(500)
@@ -133,7 +135,7 @@ fun PostListScreen(
         ) {
             Text(
                 text = if (searchText.isEmpty()) {
-                    "Total: 251 posts (paginação de 30)"
+                    "Total: $totalPosts posts (paginação de 30)"
                 } else {
                     "Resultados da busca"
                 },
@@ -142,26 +144,66 @@ fun PostListScreen(
             )
         }
 
-        LazyColumn(
-            verticalArrangement = Arrangement.spacedBy(12.dp)
-        ) {
-            items(
-                count = posts.itemCount,
-                key = posts.itemKey { it.id }
-            ) { index ->
-                val post = posts[index]
-                post?.let {
-                    MeuCard(
-                        onClick = { nav.navigate("post/${post.id}") },
-                        postId = post.id,
-                        title = post.title,
-                        body = post.body
-                    )
-                }
+        if (posts.loadState.refresh is LoadState.Loading && posts.itemCount == 0) {
+            Box(
+                modifier = Modifier.fillMaxSize(), // Ocupa todo espaço restante
+                contentAlignment = Alignment.Center
+            ) {
+                MeuLoading()
             }
+        } else {
+            LazyColumn(
+                verticalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                items(
+                    count = posts.itemCount,
+                    key = posts.itemKey { it.id }
+                ) { index ->
+                    val post = posts[index]
+                    post?.let {
+                        MeuCard(
+                            onClick = { nav.navigate("post/${post.id}") },
+                            postId = post.id,
+                            title = post.title,
+                            body = post.body
+                        )
+                    }
+                }
 
-            when (posts.loadState.append) {
-                is LoadState.Loading -> {
+                when (posts.loadState.append) {
+                    is LoadState.Loading -> {
+                        item {
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(32.dp),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                MeuLoading()
+                            }
+                        }
+                    }
+                    is LoadState.Error -> {
+                        item {
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(16.dp),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Text(
+                                    text = "Erro ao carregar mais posts",
+                                    color = BLACK.copy(alpha = 0.7f)
+                                )
+                            }
+                        }
+                    }
+                    else -> {}
+                }
+
+                if (posts.loadState.refresh is LoadState.NotLoading &&
+                    posts.itemCount == 0 &&
+                    searchText.isNotEmpty()) {
                     item {
                         Box(
                             modifier = Modifier
@@ -169,76 +211,32 @@ fun PostListScreen(
                                 .padding(32.dp),
                             contentAlignment = Alignment.Center
                         ) {
-                            MeuLoading()
+                            Column(
+                                horizontalAlignment = Alignment.CenterHorizontally
+                            ) {
+                                Text(
+                                    text = "🔍",
+                                    style = MaterialTheme.typography.headlineLarge
+                                )
+                                Spacer(modifier = Modifier.height(8.dp))
+                                Text(
+                                    text = "Nenhum post encontrado",
+                                    style = MaterialTheme.typography.titleMedium,
+                                    color = BLACK
+                                )
+                                Text(
+                                    text = "Tente buscar por outro termo",
+                                    style = MaterialTheme.typography.bodyMedium,
+                                    color = BLACK.copy(alpha = 0.7f)
+                                )
+                            }
                         }
                     }
                 }
-                is LoadState.Error -> {
-                    item {
-                        Box(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(16.dp),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Text(
-                                text = "Erro ao carregar mais posts",
-                                color = BLACK.copy(alpha = 0.7f)
-                            )
-                        }
-                    }
-                }
-                else -> {}
-            }
 
-            if (posts.loadState.refresh is LoadState.Loading && posts.itemCount == 0) {
                 item {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(32.dp),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        MeuLoading()
-                    }
+                    Spacer(modifier = Modifier.height(16.dp))
                 }
-            }
-
-            if (posts.loadState.refresh is LoadState.NotLoading &&
-                posts.itemCount == 0 &&
-                searchText.isNotEmpty()) {
-                item {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(32.dp),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Column(
-                            horizontalAlignment = Alignment.CenterHorizontally
-                        ) {
-                            Text(
-                                text = "🔍",
-                                style = MaterialTheme.typography.headlineLarge
-                            )
-                            Spacer(modifier = Modifier.height(8.dp))
-                            Text(
-                                text = "Nenhum post encontrado",
-                                style = MaterialTheme.typography.titleMedium,
-                                color = BLACK
-                            )
-                            Text(
-                                text = "Tente buscar por outro termo",
-                                style = MaterialTheme.typography.bodyMedium,
-                                color = BLACK.copy(alpha = 0.7f)
-                            )
-                        }
-                    }
-                }
-            }
-
-            item {
-                Spacer(modifier = Modifier.height(16.dp))
             }
         }
     }
