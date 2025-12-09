@@ -8,6 +8,7 @@ import com.example.lojavirtualapi.model.Post
 import com.example.lojavirtualapi.model.PostResponse
 import retrofit2.http.GET
 import retrofit2.http.Path
+import retrofit2.http.Query
 
 interface DummyApi {
 
@@ -24,9 +25,19 @@ interface DummyApi {
     suspend fun getCart(@Path("id") id: Int): Cart
 
     @GET("posts")
-    suspend fun getPosts(): PostResponse
+    suspend fun getPosts(
+        @Query("limit") limit: Int = 30,
+        @Query("skip") skip: Int = 0
+    ): PostResponse
 
     @GET("posts/{id}")
     suspend fun getPost(@Path("id") id: Int): Post
+
+    @GET("posts/search")
+    suspend fun searchPosts(
+        @Query("q") query: String,
+        @Query("limit") limit: Int = 30,
+        @Query("skip") skip: Int = 0
+    ): PostResponse
 
 }

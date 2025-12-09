@@ -40,12 +40,12 @@ fun AppNav(navController: NavHostController) {
         }
 
         composable("posts") {
-            PostListScreen(navController)
+            PostListScreen(navController, onBackClick = { navController.popBackStack() })
         }
 
         composable("post/{id}") { backStack ->
             val id = backStack.arguments?.getString("id")!!.toInt()
-            PostDetailScreen(id, navController)
+            PostDetailScreen(id, onBackClick = { navController.popBackStack() })
         }
     }
 }
