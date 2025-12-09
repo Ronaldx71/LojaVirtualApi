@@ -4,6 +4,8 @@ import com.example.lojavirtualapi.model.Product
 import com.example.lojavirtualapi.model.ProductResponse
 import com.example.lojavirtualapi.model.CartResponse
 import com.example.lojavirtualapi.model.Cart
+import com.example.lojavirtualapi.model.Post
+import com.example.lojavirtualapi.model.PostResponse
 import retrofit2.http.GET
 import retrofit2.http.Path
 
@@ -20,5 +22,11 @@ interface DummyApi {
 
     @GET("carts/{id}")
     suspend fun getCart(@Path("id") id: Int): Cart
+
+    @GET("posts")
+    suspend fun getPosts(): PostResponse
+
+    @GET("posts/{id}")
+    suspend fun getPost(@Path("id") id: Int): Post
 
 }
