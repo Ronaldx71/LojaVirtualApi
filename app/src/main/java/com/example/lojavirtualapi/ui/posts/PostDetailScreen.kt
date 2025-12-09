@@ -1,89 +1,65 @@
 package com.example.lojavirtualapi.ui.posts
 
-import androidx.compose.foundation.layout.*
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.lojavirtualapi.api.RetrofitInstance
 import com.example.lojavirtualapi.model.Post
 
 @Composable
-fun PostDetailScreen(id: Int, nav: NavController) {
+fun PostDetailScreen(
+    id: Int,
+    nav: NavController
+) {
 
     var post by remember { mutableStateOf<Post?>(null) }
-    var loading by remember { mutableStateOf(true) }
 
-    // ----- API CALL -----
     LaunchedEffect(id) {
         post = RetrofitInstance.api.getPost(id)
-        loading = false
     }
 
-    // ----- LOADING -----
-    if (loading) {
-        Box(
-            modifier = Modifier.fillMaxSize(),
-            contentAlignment = Alignment.Center
-        ) {
-            CircularProgressIndicator()
+    post?.let { post ->
+
+        Column(modifier = Modifier.padding(16.dp)) {
+            Text("Usuário: ${post.userId}" , style = MaterialTheme.typography.titleLarge)
+            Text("Postagem ID: ${post.id}", style = MaterialTheme.typography.titleMedium)
+            Text("Titulo: ${post.title}")
+            Text("Corpo: ${post.body}")
+            Text("Visualizações: ${post.views}")
+            Text("Tags: ${post.tags.joinToString(", ")}")
+            Text("Likes: ${post.reactions.likes}")
+            Text("Dislikes: ${post.reactions.dislikes}")
         }
-        return
-    }
-
-    val p = post ?: return
-
-    // ----- MAIN LAYOUT -----
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp)
+    } ?: Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
     ) {
-
-        Text(
-            text = p.title,
-            style = MaterialTheme.typography.headlineSmall
-        )
-
-        Spacer(Modifier.height(16.dp))
-
-        Text(
-            text = p.body,
-            style = MaterialTheme.typography.bodyLarge
-        )
-
-        Spacer(Modifier.height(24.dp))
-
-        Text(
-            text = "Tags:",
-            style = MaterialTheme.typography.titleMedium
-        )
-
-        Spacer(Modifier.height(8.dp))
-
-        Row {
-            p.tags.forEach { tag ->
-                AssistChip(
-                    onClick = {},
-                    label = { Text("#$tag") },
-                    modifier = Modifier.padding(end = 8.dp)
-                )
-            }
-        }
-
-        Spacer(Modifier.height(24.dp))
-
-        Text(
-            text = "Reações: ${p.reactions}",
-            style = MaterialTheme.typography.bodyMedium
-        )
-
-        Spacer(Modifier.height(32.dp))
-
-        Button(onClick = { nav.popBackStack() }) {
-            Text("Voltar")
-        }
+        CircularProgressIndicator()
     }
+
+}
+
+@Preview
+@Composable
+private fun PostDetailScreenPreview(){
+    PostDetailScreen(
+        id = 3,
+        nav = NavController(LocalContext.current)
+    )
 }

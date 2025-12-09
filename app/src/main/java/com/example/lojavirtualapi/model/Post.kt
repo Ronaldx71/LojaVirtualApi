@@ -5,8 +5,14 @@ data class Post(
     val id: Int,
     val title: String,
     val body: String,
+    val views: Int,
     val tags: List<String>,
-    val reactions: Int
+    val reactions: Reactions
+)
+
+data class Reactions(
+    val dislikes: Int,
+    val likes: Int
 )
 
 data class PostResponse(
