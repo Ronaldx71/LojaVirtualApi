@@ -25,6 +25,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -35,7 +36,9 @@ import androidx.compose.ui.unit.dp
 import com.danilloteles.appnetflixapi.ui.theme.BLACK
 import com.danilloteles.appnetflixapi.ui.theme.WHITE
 import com.example.lojavirtualapi.api.RetrofitInstance
+import com.example.lojavirtualapi.extensions.translate
 import com.example.lojavirtualapi.model.Post
+import com.example.lojavirtualapi.translation.TranslationManager
 import com.example.lojavirtualapi.ui.posts.material3expressive.Dislike
 import com.example.lojavirtualapi.ui.posts.material3expressive.Like
 import com.example.lojavirtualapi.ui.posts.material3expressive.MeuLoading
@@ -47,11 +50,18 @@ fun PostDetailScreen(
     id: Int,
     onBackClick: () -> Unit
 ) {
-
     var post by remember { mutableStateOf<Post?>(null) }
+    val scope = rememberCoroutineScope()
+    val translationManager = remember { TranslationManager.getInstance() }
 
     LaunchedEffect(id) {
-        post = RetrofitInstance.api.getPost(id)
+        // Carregar o post
+        val loadedPost = RetrofitInstance.api.getPost(id)
+
+        // Traduzir o post
+        val translatedPost = loadedPost.translate(translationManager)
+
+        post = translatedPost
     }
 
     post?.let { post ->
@@ -115,7 +125,7 @@ fun PostDetailScreen(
             Spacer(modifier = Modifier.height(16.dp))
 
             Text(
-                text = post.title,
+                text = post.displayTitle,
                 style = MaterialTheme.typography.headlineSmall,
                 color = BLACK,
                 modifier = Modifier.padding(vertical = 4.dp)
@@ -124,7 +134,7 @@ fun PostDetailScreen(
             Spacer(modifier = Modifier.height(8.dp))
 
             Text(
-                text = post.body.replace("\n", "\n\n"),
+                text = post.displayBody.replace("\n", "\n\n"),
                 style = MaterialTheme.typography.bodyMedium,
                 color = BLACK,
                 textAlign = TextAlign.Justify
@@ -156,7 +166,7 @@ fun PostDetailScreen(
             LazyRow(
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                items(post.tags) { tag ->
+                items(post.displayTags) { tag ->
                     Surface(
                         color = WHITE,
                         shape = RoundedCornerShape(16.dp),
@@ -171,6 +181,15 @@ fun PostDetailScreen(
                         )
                     }
                 }
+            }
+            // Indicador de que o conteúdo foi traduzido
+            if (post.titlePt != null) {
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(
+                    text = "✓ Conteúdo traduzido do inglês",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = BLACK.copy(alpha = 0.5f)
+                )
             }
         }
     } ?: Box(

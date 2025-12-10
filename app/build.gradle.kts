@@ -71,6 +71,11 @@ dependencies {
     implementation(libs.androidx.paging.runtime)
     implementation(libs.androidx.paging.compose)
 
+    // ML Kit Translation
+    implementation(libs.translate)
+    // função await() para Tasks do Google Play Services
+    implementation(libs.kotlinx.coroutines.play.services)
+
     // Activity Compose
     implementation(libs.androidx.activity.compose)
 

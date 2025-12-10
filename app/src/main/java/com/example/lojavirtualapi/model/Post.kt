@@ -7,8 +7,21 @@ data class Post(
     val body: String,
     val views: Int,
     val tags: List<String>,
-    val reactions: Reactions
-)
+    val reactions: Reactions,
+
+    val titlePt: String? = null,
+    val bodyPt: String? = null,
+    val tagsPt: List<String>? = null
+) {
+    val displayTitle: String
+        get() = titlePt ?: title
+
+    val displayBody: String
+        get() = bodyPt ?: body
+
+    val displayTags: List<String>
+        get() = tagsPt ?: tags
+}
 
 data class Reactions(
     val dislikes: Int,

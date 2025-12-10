@@ -15,6 +15,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Clear
+import androidx.compose.material.icons.filled.Language
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
@@ -56,6 +57,8 @@ fun PostListScreen(
     var searchText by remember { mutableStateOf("") }
     val posts = viewModel.posts.collectAsLazyPagingItems()
     val totalPosts by viewModel.totalPosts.collectAsState()
+    val isTranslationEnabled by viewModel.isTranslationEnabled.collectAsState()
+    val isModelDownloaded by viewModel.isModelDownloaded.collectAsState()
 
     LaunchedEffect(searchText) {
         delay(500)
@@ -88,6 +91,47 @@ fun PostListScreen(
                 text = "Postagens",
                 style = MaterialTheme.typography.headlineMedium.copy(fontWeight = FontWeight.Bold),
                 color = BLACK
+            )
+
+            // Botão para alternar tradução
+            IconButton(
+                onClick = { viewModel.toggleTranslation() },
+                enabled = isModelDownloaded
+            ) {
+                Icon(
+                    Icons.Default.Language,
+                    contentDescription = if (isTranslationEnabled) "Desativar tradução" else "Ativar tradução",
+                    tint = if (isTranslationEnabled) BLACK else BLACK.copy(alpha = 0.3f)
+                )
+            }
+        }
+
+        // Indicador de status da tradução
+        if (!isModelDownloaded) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 8.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                CircularProgressIndicator(
+                    modifier = Modifier.size(16.dp),
+                    strokeWidth = 2.dp,
+                    color = BLACK
+                )
+                Spacer(modifier = Modifier.size(8.dp))
+                Text(
+                    text = "Baixando modelo de tradução...",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = BLACK.copy(alpha = 0.7f)
+                )
+            }
+        } else if (isTranslationEnabled) {
+            Text(
+                text = "✓ Tradução ativada (EN → PT)",
+                style = MaterialTheme.typography.bodySmall,
+                color = BLACK.copy(alpha = 0.7f),
+                modifier = Modifier.padding(bottom = 8.dp)
             )
         }
 
@@ -164,8 +208,8 @@ fun PostListScreen(
                         MeuCard(
                             onClick = { nav.navigate("post/${post.id}") },
                             postId = post.id,
-                            title = post.title,
-                            body = post.body
+                            title = post.displayTitle,
+                            body = post.displayBody
                         )
                     }
                 }
