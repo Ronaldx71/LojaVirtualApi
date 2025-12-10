@@ -65,18 +65,7 @@ class CartActivity : AppCompatActivity() {
             if (resposta != null) {
                 if (resposta.isSuccessful) {
 
-                    /* //Usand o ?.let (garante que não seja nullo)
-                       val respostaCart: RespostaCart? = resposta.body()
-
-                        withContext(Dispatchers.Main) {
-                            respostaCart?.let {  // Se respostaCart não for nulo, pegue este objeto (it) e use-o para executar o código a seguir..
-                                //Dentro do bloco let, você não precisa mais usar o ? ou o !! (double bang) ao acessar as propriedades. O Kotlin sabe que it (que é o respostaCart não-nulo) é seguro.
-                                // Extrai a lista de Carts e a passa para o adaptador
-                                cartAdapter.atualizarLista(it.carts)
-                                Log.i(TAG, "Dados carregados com sucesso: ${it.carts.size} carrinhos.")
-                            }
-                        }*/
-
+   
                     val respostaCart = resposta.body()
 
                     if (respostaCart != null) {
