@@ -128,7 +128,7 @@ fun PostListScreen(
             }
         } else if (isTranslationEnabled) {
             Text(
-                text = "✓ Tradução ativada (EN → PT)",
+                text = "Tradução ativada (EN → PT)",
                 style = MaterialTheme.typography.bodySmall,
                 color = BLACK.copy(alpha = 0.7f),
                 modifier = Modifier.padding(bottom = 8.dp)
@@ -138,7 +138,15 @@ fun PostListScreen(
         OutlinedTextField(
             value = searchText,
             onValueChange = { searchText = it },
-            label = { Text("Buscar posts na API...") },
+            label = {
+                Text(
+                    if (isTranslationEnabled && searchText.isNotEmpty()) {
+                        "Buscando em português..."
+                    } else {
+                        "Buscar posts na API..."
+                    }
+                )
+            },
             leadingIcon = {
                 if (posts.loadState.refresh is LoadState.Loading && searchText.isNotEmpty()) {
                     CircularProgressIndicator(
@@ -190,7 +198,7 @@ fun PostListScreen(
 
         if (posts.loadState.refresh is LoadState.Loading && posts.itemCount == 0) {
             Box(
-                modifier = Modifier.fillMaxSize(), // Ocupa todo espaço restante
+                modifier = Modifier.fillMaxSize(),
                 contentAlignment = Alignment.Center
             ) {
                 MeuLoading()

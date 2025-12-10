@@ -8,26 +8,41 @@ import kotlinx.coroutines.tasks.await
 
 class TranslationManager {
 
-    private var translator: Translator? = null
+    private var translatorEnToPt: Translator? = null
+    private var translatorPtToEn: Translator? = null
     private var isModelDownloaded = false
 
-    // Inicializar o tradutor
-    private fun getTranslator(): Translator {
-        if (translator == null) {
+    // Tradutor EN → PT
+    private fun getTranslatorEnToPt(): Translator {
+        if (translatorEnToPt == null) {
             val options = TranslatorOptions.Builder()
                 .setSourceLanguage(TranslateLanguage.ENGLISH)
                 .setTargetLanguage(TranslateLanguage.PORTUGUESE)
                 .build()
-            translator = Translation.getClient(options)
+            translatorEnToPt = Translation.getClient(options)
         }
-        return translator!!
+        return translatorEnToPt!!
+    }
+
+    // Tradutor PT → EN (para busca)
+    private fun getTranslatorPtToEn(): Translator {
+        if (translatorPtToEn == null) {
+            val options = TranslatorOptions.Builder()
+                .setSourceLanguage(TranslateLanguage.PORTUGUESE)
+                .setTargetLanguage(TranslateLanguage.ENGLISH)
+                .build()
+            translatorPtToEn = Translation.getClient(options)
+        }
+        return translatorPtToEn!!
     }
 
     // Baixar modelo se necessário (apenas uma vez)
     suspend fun downloadModelIfNeeded(): Boolean {
         return try {
             if (!isModelDownloaded) {
-                getTranslator().downloadModelIfNeeded().await()
+                // Baixar ambos os modelos
+                getTranslatorEnToPt().downloadModelIfNeeded().await()
+                getTranslatorPtToEn().downloadModelIfNeeded().await()
                 isModelDownloaded = true
             }
             true
@@ -37,7 +52,7 @@ class TranslationManager {
         }
     }
 
-    // Traduzir texto único
+    // Traduzir texto único EN → PT
     suspend fun translate(text: String): String {
         return try {
             if (text.isBlank()) return text
@@ -45,8 +60,24 @@ class TranslationManager {
             // Garantir que o modelo está baixado
             downloadModelIfNeeded()
 
-            // Traduzir
-            getTranslator().translate(text).await()
+            // Traduzir EN → PT
+            getTranslatorEnToPt().translate(text).await()
+        } catch (e: Exception) {
+            e.printStackTrace()
+            text // Retorna texto original em caso de erro
+        }
+    }
+
+    // Traduzir texto PT → EN (para busca)
+    suspend fun translateToEnglish(text: String): String {
+        return try {
+            if (text.isBlank()) return text
+
+            // Garantir que o modelo está baixado
+            downloadModelIfNeeded()
+
+            // Traduzir PT → EN
+            getTranslatorPtToEn().translate(text).await()
         } catch (e: Exception) {
             e.printStackTrace()
             text // Retorna texto original em caso de erro
@@ -62,7 +93,7 @@ class TranslationManager {
                 if (text.isBlank()) {
                     text
                 } else {
-                    getTranslator().translate(text).await()
+                    getTranslatorEnToPt().translate(text).await()
                 }
             }
         } catch (e: Exception) {
@@ -77,7 +108,7 @@ class TranslationManager {
             downloadModelIfNeeded()
 
             tags.map { tag ->
-                getTranslator().translate(tag).await()
+                getTranslatorEnToPt().translate(tag).await()
             }
         } catch (e: Exception) {
             e.printStackTrace()
@@ -87,8 +118,10 @@ class TranslationManager {
 
     // Liberar recursos quando não precisar mais
     fun close() {
-        translator?.close()
-        translator = null
+        translatorEnToPt?.close()
+        translatorPtToEn?.close()
+        translatorEnToPt = null
+        translatorPtToEn = null
         isModelDownloaded = false
     }
 

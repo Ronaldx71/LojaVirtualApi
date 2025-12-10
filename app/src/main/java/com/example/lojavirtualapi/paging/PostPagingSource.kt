@@ -20,11 +20,18 @@ class PostPagingSource(
         return try {
             val page = params.key ?: 0
 
-            val response: PostResponse = dummyApi.getPosts(
-                skip = page * PAGE_SIZE,
-                limit = PAGE_SIZE,
-                query = query
-            )
+            val response: PostResponse = if (query.isNotEmpty()) {
+                dummyApi.searchPosts(
+                    query = query,
+                    skip = page * PAGE_SIZE,
+                    limit = PAGE_SIZE
+                )
+            } else {
+                dummyApi.getPosts(
+                    skip = page * PAGE_SIZE,
+                    limit = PAGE_SIZE
+                )
+            }
 
             if (page == 0) {
                 onTotal(response.total)
