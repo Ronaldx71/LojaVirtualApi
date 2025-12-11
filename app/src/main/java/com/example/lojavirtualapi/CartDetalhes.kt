@@ -40,6 +40,25 @@ class CartDetalhes : AppCompatActivity() {
 
     private fun formatarListaProdutos(cart: Cart): String {
 
+        var detalhes = "### Detalhes dos Produtos (${cart.products.size} itens) ###\n\n"
 
+
+        for (produto in cart.products) {
+
+            val contador = cart.products.indexOf(produto) + 1
+
+
+            detalhes += "#$contador  -   ID: " + produto.id
+            detalhes += " - Produto: " + produto.title
+            detalhes += " - Qtd: " + produto.quantity
+
+            detalhes += " - Preço/Unid: R$ " + String.format("%.2f", produto.price)
+            detalhes += "\n\n"
+        }
+
+        detalhes += "\n---"
+        detalhes += "\nTOTAL FINAL: R$ " + String.format("%.2f", cart.total)
+
+        return detalhes
     }
 }
