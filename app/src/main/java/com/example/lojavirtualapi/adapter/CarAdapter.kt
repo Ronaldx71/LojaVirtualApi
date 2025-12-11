@@ -39,10 +39,12 @@ class CarAdapter (val onClick: (Cart) -> Unit) : RecyclerView.Adapter<CarAdapter
 
             binding.txtId.text = "ID: ${item.id}"
             binding.txtTitle.text = "Total Produtos: ${item.totalProducts}"
-            /*Glide.with(binding.imgCart.context)
+            Glide.with(binding.imgCart.context)
                 .load(R.drawable.cart_imagem)
-                .into(binding.imgCart)*/
-            //binding.imgCart.setImageResource(R.drawable.cart_imagem)
+                .placeholder(R.drawable.cart_imagem)
+                .error(R.drawable.cart_imagem)
+                .into(binding.imgCart)
+
 
             binding.consLay.setOnClickListener {
                 onClick(item)
