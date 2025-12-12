@@ -13,3 +13,21 @@
 .externalNativeBuild
 .cxx
 local.properties
+# Ignore Android Studio/IntelliJ project files
+.idea/
+
+
+# Ignore Gradle
+.gradle/
+build/
+
+# Ignore Kotlin build folders
+*/build/
+
+# Ignore system files
+
+Thumbs.db
+
+# Ignore generated files
+
+
