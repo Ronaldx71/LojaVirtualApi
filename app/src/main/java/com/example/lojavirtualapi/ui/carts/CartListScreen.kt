@@ -12,39 +12,83 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.lojavirtualapi.api.RetrofitInstance
 import com.example.lojavirtualapi.model.Cart
+import kotlinx.coroutines.launch
 
 @Composable
 fun CartListScreen(nav: NavController) {
 
-    var list by remember { mutableStateOf<List<Cart>>(emptyList()) }
+    var carts by remember { mutableStateOf<List<Cart>>(emptyList()) }
     var loading by remember { mutableStateOf(true) }
+    var error by remember { mutableStateOf<String?>(null) }
+
+    val scope = rememberCoroutineScope()
 
     LaunchedEffect(Unit) {
-        val response = RetrofitInstance.api.getCarts()
-        list = response.carts
-        loading = false
-    }
-
-    if (loading) {
-        Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-            CircularProgressIndicator()
+        scope.launch {
+            try {
+                val response = RetrofitInstance.api.getCarts()
+                carts = response.carts
+            } catch (e: Exception) {
+                error = "Erro ao carregar carrinhos"
+            } finally {
+                loading = false
+            }
         }
-        return
     }
 
-    LazyColumn(Modifier.fillMaxSize().padding(16.dp)) {
-        items(list) { cart ->
-
-            Card(
-                Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 12.dp)
-                    .clickable { nav.navigate("cart/${cart.id}") }
+    when {
+        loading -> {
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
             ) {
-                Column(Modifier.padding(16.dp)) {
-                    Text("Carrinho ID: ${cart.id}", style = MaterialTheme.typography.titleMedium)
-                    Text("Usuário: ${cart.userId}")
-                    Text("Total: R$ ${cart.total}")
+                CircularProgressIndicator()
+            }
+        }
+
+        error != null -> {
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(text = error ?: "Erro inesperado")
+            }
+        }
+
+        carts.isEmpty() -> {
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                Text("Nenhum carrinho encontrado")
+            }
+        }
+
+        else -> {
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(16.dp),
+                verticalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                items(carts) { cart ->
+                    Card(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable {
+                                nav.navigate("cart/${cart.id}")
+                            }
+                    ) {
+                        Column(modifier = Modifier.padding(16.dp)) {
+                            Text(
+                                text = "Carrinho ID: ${cart.id}",
+                                style = MaterialTheme.typography.titleMedium
+                            )
+                            Spacer(modifier = Modifier.height(4.dp))
+                            Text("Usuário: ${cart.userId}")
+                            Text("Total: R$ ${cart.total}")
+                        }
+                    }
                 }
             }
         }
