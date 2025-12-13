@@ -1,5 +1,9 @@
 package com.example.lojavirtualapi.model
 
+data class UsersResponse(
+    val users: List<User>
+)
+
 data class User(
     val id: Int,
     val firstName: String,

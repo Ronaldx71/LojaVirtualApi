@@ -11,6 +11,8 @@ import com.example.lojavirtualapi.ui.carts.CartListScreen
 import com.example.lojavirtualapi.ui.carts.CartDetailScreen
 import com.example.lojavirtualapi.ui.posts.PostDetailScreen
 import com.example.lojavirtualapi.ui.posts.PostListScreen
+import com.example.lojavirtualapi.ui.users.UserDetailScreen
+import com.example.lojavirtualapi.ui.users.UsersListScreen
 
 @Composable
 fun AppNav(navController: NavHostController) {
@@ -37,6 +39,13 @@ fun AppNav(navController: NavHostController) {
         composable("cart/{id}") { backStack ->
             val id = backStack.arguments?.getString("id")!!.toInt()
             CartDetailScreen(id, navController)
+        }
+
+        composable("users") { UsersListScreen(navController) }
+
+        composable("user/{id}") { backStack ->
+            val id = backStack.arguments?.getString("id")!!.toInt()
+            UserDetailScreen(id, navController)
         }
 
         composable("posts") {
