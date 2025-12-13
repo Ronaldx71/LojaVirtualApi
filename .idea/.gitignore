@@ -1,0 +1,13 @@
+# Default ignored files
+/shelf/
+/workspace.xml
+/appInsightsSettings.xml
+/vcs.xml
+/misc.xml
+/inspectionProfiles/Project_Default.xml
+.idea/runConfigurations.xml
+/compiler.xml
+/deviceManager.xml
+/gradle.xml
+/migrations.xml
+/runConfigurations.xml

@@ -43,37 +43,51 @@ android {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
-    kotlinOptions {
-        jvmTarget = "11"
+    kotlin {
+        compilerOptions {
+            jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_11)
+        }
     }
 }
 
 dependencies {
     // BOM Compose (mantém versões compatíveis)
-    implementation(platform("androidx.compose:compose-bom:2024.04.01"))
+    implementation(platform(libs.androidx.compose.bom))
 
 // UI Compose
-    implementation("androidx.compose.ui:ui")
-    implementation("androidx.compose.ui:ui-tooling-preview")
-    debugImplementation("androidx.compose.ui:ui-tooling")
-    implementation("androidx.compose.material:material-icons-extended")
-
+    implementation(libs.androidx.compose.ui)
+    implementation(libs.androidx.compose.ui.tooling.preview)
+    debugImplementation(libs.androidx.compose.ui.tooling)
 
     // Material 3
-    implementation("androidx.compose.material3:material3")
+    implementation(libs.androidx.compose.material3)
+
+    implementation(libs.androidx.compose.material.icons.extended)
+
+    // Material 3 Expressive (versão mais recente)
+    implementation(libs.androidx.material3)
+
+    // Paging 3
+    implementation(libs.androidx.paging.runtime)
+    implementation(libs.androidx.paging.compose)
+
+    // ML Kit Translation
+    implementation(libs.translate)
+    // função await() para Tasks do Google Play Services
+    implementation(libs.kotlinx.coroutines.play.services)
 
     // Activity Compose
-    implementation("androidx.activity:activity-compose:1.8.2")
+    implementation(libs.androidx.activity.compose)
 
     // Navigation
-    implementation("androidx.navigation:navigation-compose:2.7.0")
+    implementation(libs.androidx.navigation.compose)
 
     // Coil: carregar imagens da internet
-    implementation("io.coil-kt:coil-compose:2.4.0")
+    implementation(libs.coil.compose)
 
     // Retrofit
-    implementation("com.squareup.retrofit2:retrofit:2.9.0")
-    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+    implementation(libs.retrofit)
+    implementation(libs.converter.gson)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
