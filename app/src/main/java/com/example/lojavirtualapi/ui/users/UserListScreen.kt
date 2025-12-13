@@ -1,5 +1,4 @@
 package com.example.lojavirtualapi.ui.users
-
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -11,47 +10,93 @@ import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.example.lojavirtualapi.api.RetrofitInstance
 import com.example.lojavirtualapi.model.User
+import androidx.compose.foundation.clickable
+import androidx.compose.ui.Alignment
+
 
 @Composable
 fun UsersListScreen(nav: NavController) {
 
     var list by remember { mutableStateOf<List<User>>(emptyList()) }
     var loading by remember { mutableStateOf(true) }
+    var error by remember { mutableStateOf<String?>(null) }
 
     LaunchedEffect(Unit) {
-        val response = RetrofitInstance.api.getUsers()
-        list = response.users
-        loading = false
+        try {
+            val response = RetrofitInstance.api.getUsers()
+            list = response.users
+        } catch (e: Exception) {
+            error = "Erro ao carregar usuários"
+        } finally {
+            loading = false
+        }
     }
 
-    if (loading) {
-        CircularProgressIndicator()
-        return
-    }
-
-    LazyColumn(Modifier.fillMaxSize().padding(16.dp)) {
-        items(list) { user ->
-            Card(
-                Modifier.fillMaxWidth().padding(bottom = 12.dp)
+    when {
+        loading -> {
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
             ) {
-                Row(Modifier.padding(16.dp)) {
+                CircularProgressIndicator()
+            }
+        }
 
-                    AsyncImage(
-                        model = user.image,
-                        contentDescription = null,
-                        modifier = Modifier.size(64.dp)
-                    )
+        error != null -> {
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(error ?: "Erro inesperado")
+            }
+        }
+
+        else -> {
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(16.dp),
+                verticalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                items(list) { user ->
+                    Card(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(bottom = 12.dp)
+                            .clickable {
+                                nav.navigate("user/${user.id}")
+                            }
+                    ) {
+                        Row(Modifier.padding(16.dp)) {
+                            AsyncImage(
+                                model = user.image,
+                                contentDescription = null,
+                                modifier = Modifier.size(64.dp)
+                            )
+                            Spacer(Modifier.width(16.dp))
+                            Column {
+                                Text(
+                                    "${user.firstName} ${user.lastName}",
+                                    style = MaterialTheme.typography.titleMedium
+                                )
+                                Text(user.email)
+                            }
+                        }
+                    }
+
 
                     Spacer(Modifier.width(16.dp))
 
-                    Column {
-                        Text("${user.firstName} ${user.lastName}",
-                            style = MaterialTheme.typography.titleMedium)
-
-                        Text(user.email)
+                            Column {
+                                Text(
+                                    "${user.firstName} ${user.lastName}",
+                                    style = MaterialTheme.typography.titleMedium
+                                )
+                                Text(user.email)
+                            }
+                        }
                     }
                 }
             }
         }
-    }
-}
+
