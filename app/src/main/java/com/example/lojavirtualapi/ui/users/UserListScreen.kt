@@ -29,10 +29,19 @@ fun UsersListScreen(nav: NavController) {
         return
     }
 
-    LazyColumn(Modifier.fillMaxSize().padding(16.dp)) {
+    LazyColumn(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp)
+    ) {
         items(list) { user ->
             Card(
-                Modifier.fillMaxWidth().padding(bottom = 12.dp)
+                onClick = {
+                    nav.navigate("user/${user.id}")
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 12.dp)
             ) {
                 Row(Modifier.padding(16.dp)) {
 
@@ -45,9 +54,10 @@ fun UsersListScreen(nav: NavController) {
                     Spacer(Modifier.width(16.dp))
 
                     Column {
-                        Text("${user.firstName} ${user.lastName}",
-                            style = MaterialTheme.typography.titleMedium)
-
+                        Text(
+                            text = "${user.firstName} ${user.lastName}",
+                            style = MaterialTheme.typography.titleMedium
+                        )
                         Text(user.email)
                     }
                 }

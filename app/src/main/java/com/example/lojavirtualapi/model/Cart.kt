@@ -7,8 +7,8 @@ data class CartResponse(
 data class Cart(
     val id: Int,
     val products: List<CartProduct>,
-    val total: Int,
-    val discountedTotal: Int,
+    val total: Double,
+    val discountedTotal: Double,
     val userId: Int,
     val totalProducts: Int,
     val totalQuantity: Int
@@ -17,9 +17,9 @@ data class Cart(
 data class CartProduct(
     val id: Int,
     val title: String,
-    val price: Int,
+    val price: Double,
     val quantity: Int,
-    val total: Int,
+    val total: Double,
     val discountPercentage: Double,
-    val discountedPrice: Int
+    val discountedPrice: Double
 )
