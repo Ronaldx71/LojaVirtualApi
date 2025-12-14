@@ -45,9 +45,10 @@ fun HomeScreen(nav: NavController) {
                         title = "Carrinho"
                     )
                     2 -> CardHome(
-                        onClick = { /* usuários depois */ },
+                        onClick = { nav.navigate("users") },
                         title = "Usuários"
                     )
+
                     3 -> CardHome(
                         onClick = { nav.navigate("posts") },
                         title = "Postagens"
