@@ -3,6 +3,8 @@ package com.example.lojavirtualapi.ui.carts
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -24,34 +26,47 @@ fun CartDetailScreen(id: Int, nav: NavController) {
 
     cart?.let { c ->
 
-        Column(Modifier.padding(16.dp)) {
-            Text("Carrinho ID: ${c.id}", style = MaterialTheme.typography.titleLarge)
-            Text("Usuário: ${c.userId}")
-            Text("Total: R$ ${c.total}")
-            Text("Itens: ${c.totalProducts}")
+        Column(
+            modifier = Modifier
+                .padding(16.dp)
+                .fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally // Centraliza o ícone
+        ) {
+            // 1. INSERÇÃO DO ÍCONE GRANDE NO TOPO
+            Icon(
+                imageVector = Icons.Filled.ShoppingCart,
+                contentDescription = "Carrinho de Compras",
+                modifier = Modifier.size(80.dp), // Ícone em tamanho grande (80dp)
+                tint = MaterialTheme.colorScheme.primary
+            )
 
-            Spacer(Modifier.height(16.dp))
+            Spacer(Modifier.height(24.dp)) // Espaço após o ícone
 
-            LazyColumn {
-                items(c.products) { p: CartProduct ->
-                    Card(
-                        Modifier
-                            .fillMaxWidth()
-                            .padding(bottom = 12.dp)
-                    ) {
-                        Column(Modifier.padding(16.dp)) {
-                            Text(p.title, style = MaterialTheme.typography.titleMedium)
-                            Text("Preço: R$ ${p.price}")
-                            Text("Quantidade: ${p.quantity}")
+            // 2. CONTEÚDO ORIGINAL (envolvido para manter o alinhamento à esquerda)
+            Column(Modifier.fillMaxWidth()) {
+                Text("Carrinho ID: ${c.id}", style = MaterialTheme.typography.titleLarge)
+                Text("Usuário: ${c.userId}")
+                Text("Total: R$ ${c.total}")
+                Text("Itens: ${c.totalProducts}")
+
+                Spacer(Modifier.height(16.dp))
+
+                LazyColumn {
+                    items(c.products) { p: CartProduct ->
+                        Card(
+                            Modifier
+                                .fillMaxWidth()
+                                .padding(bottom = 12.dp)
+                        ) {
+                            Column(Modifier.padding(16.dp)) {
+                                Text(p.title, style = MaterialTheme.typography.titleMedium)
+                                Text("Preço: R$ ${p.price}")
+                                Text("Quantidade: ${p.quantity}")
+                            }
                         }
                     }
                 }
             }
         }
-    } ?: Box(
-        Modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
-    ) {
-        CircularProgressIndicator()
     }
 }

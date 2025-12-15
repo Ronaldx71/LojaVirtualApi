@@ -4,15 +4,20 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.lojavirtualapi.api.RetrofitInstance
 import com.example.lojavirtualapi.model.Cart
 import kotlinx.coroutines.launch
+import androidx.compose.ui.platform.LocalContext
+
 
 @Composable
 fun CartListScreen(nav: NavController) {
@@ -71,7 +76,7 @@ fun CartListScreen(nav: NavController) {
                     .padding(16.dp),
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
-                items(carts) { cart ->
+                items(carts) { cart -> // <--- ESTE 'cart' É O PARÂMETRO
                     Card(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -79,18 +84,45 @@ fun CartListScreen(nav: NavController) {
                                 nav.navigate("cart/${cart.id}")
                             }
                     ) {
-                        Column(modifier = Modifier.padding(16.dp)) {
-                            Text(
-                                text = "Carrinho ID: ${cart.id}",
-                                style = MaterialTheme.typography.titleMedium
+                        // NOVO CÓDIGO AQUI
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(16.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            // O ÍCONE (usa o import Icons.Filled.ShoppingCart)
+                            Icon(
+                                imageVector = Icons.Filled.ShoppingCart,
+                                contentDescription = "Carrinho",
+                                tint = MaterialTheme.colorScheme.primary,
+                                modifier = Modifier.size(32.dp).padding(end = 8.dp)
                             )
-                            Spacer(modifier = Modifier.height(4.dp))
-                            Text("Usuário: ${cart.userId}")
-                            Text("Total: R$ ${cart.total}")
+
+                            // O TEXTO (USA A VARIÁVEL 'cart' do LazyColumn)
+                            Column {
+                                Text(
+                                    text = "Carrinho ID: ${cart.id}", // Aqui não deve dar erro
+                                    style = MaterialTheme.typography.titleMedium
+                                )
+                                Text("Total: R$ ${cart.total}")
+                            }
                         }
                     }
                 }
             }
         }
     }
+}
+@Preview(showBackground = true)
+@Composable
+fun CartListScreenPreview() {
+    // Cria um NavController de 'mentirinha' para a preview
+    val fakeNavController = NavController(LocalContext.current)
+
+    // Chama a tela principal
+    // ATENÇÃO: Se o projeto usa um tema, você deve envolver a chamada com o tema.
+    // Ex: LojaVirtualApiTheme { CartListScreen(nav = fakeNavController) }
+
+    CartListScreen(nav = fakeNavController)
 }
