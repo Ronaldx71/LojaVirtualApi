@@ -9,10 +9,14 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.example.lojavirtualapi.api.RetrofitInstance
 import com.example.lojavirtualapi.model.Product
+import com.example.lojavirtualapi.ui.posts.PostListScreen
+
 
 @Composable
 fun ProductListScreen(nav: NavController) {
