@@ -6,6 +6,7 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material3.Button
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -24,9 +25,10 @@ fun HomeScreen(nav: NavController) {
 
     Surface(
         modifier = Modifier.fillMaxSize(),
-        color = Color.White
+        color = MaterialTheme.colorScheme.background
     ) {
-        LazyVerticalGrid(
+
+    LazyVerticalGrid(
             columns = GridCells.Fixed(2),
             modifier = Modifier
                 .fillMaxSize()
@@ -43,6 +45,7 @@ fun HomeScreen(nav: NavController) {
                     1 -> CardHome(
                         onClick = { nav.navigate("carts") },
                         title = "Carrinho"
+
                     )
                     2 -> CardHome(
                         onClick = { nav.navigate("users") },
