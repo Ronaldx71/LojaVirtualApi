@@ -15,11 +15,15 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -31,7 +35,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.danilloteles.appnetflixapi.ui.theme.BLACK
 import com.danilloteles.appnetflixapi.ui.theme.WHITE
@@ -45,6 +48,7 @@ import com.example.lojavirtualapi.ui.posts.material3expressive.MeuLoading
 import com.example.lojavirtualapi.ui.posts.material3expressive.Visualizacoes
 import java.util.Locale
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PostDetailScreen(
     id: Int,
@@ -64,148 +68,176 @@ fun PostDetailScreen(
         post = translatedPost
     }
 
-    post?.let { post ->
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(16.dp)
-        ) {
-
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 16.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                IconButton(
-                    onClick = onBackClick
-                ) {
-                    Icon(
-                        Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = "Voltar",
-                        tint = BLACK
-                    )
-                }
-
-                Text(
-                    text = "Detalhes da Postagem",
-                    style = MaterialTheme.typography.headlineMedium.copy(fontWeight = FontWeight.Bold),
-                    color = BLACK
-                )
-            }
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 4.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    text = "Usuário: ${post.userId}",
-                    style = MaterialTheme.typography.titleLarge,
-                    color = BLACK
-                )
-
-                Surface(
-                    color = BLACK,
-                    shape = RoundedCornerShape(12.dp)
-                ) {
-                    Text(
-                        text = "Postagem ID: ${post.id}",
-                        style = MaterialTheme.typography.titleMedium,
-                        color = WHITE,
-                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
-                    )
-                }
-            }
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            Text(
-                text = post.displayTitle,
-                style = MaterialTheme.typography.headlineSmall,
-                color = BLACK,
-                modifier = Modifier.padding(vertical = 4.dp)
-            )
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            Text(
-                text = post.displayBody.replace("\n", "\n\n"),
-                style = MaterialTheme.typography.bodyMedium,
-                color = BLACK,
-                textAlign = TextAlign.Justify
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(16.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Visualizacoes(
-                    visualizacoes = post.views,
-                )
-
-                Like(
-                    likes = post.reactions.likes,
-                )
-
-                Dislike(
-                    dislikes = post.reactions.dislikes,
-                )
-            }
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            Text("Tags:", style = MaterialTheme.typography.titleMedium)
-            Spacer(modifier = Modifier.height(8.dp))
-            LazyRow(
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                items(post.displayTags) { tag ->
-                    Surface(
-                        color = WHITE,
-                        shape = RoundedCornerShape(16.dp),
-                        border = BorderStroke(1.dp, BLACK),
-                        modifier = Modifier.padding(vertical = 2.dp)
-                    ) {
-                        Text(
-                            text = tag.uppercase(Locale.ROOT),
-                            color = BLACK,
-                            modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp),
-                            style = MaterialTheme.typography.bodySmall
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = {
+                    Text("Detalhe do Usuário")
+                },
+                navigationIcon = {
+                    IconButton(onClick = {
+                        val nav = null
+                        nav.popBackStack()
+                    }) {
+                        Icon(
+                            imageVector = Icons.Default.ArrowBack,
+                            contentDescription = "Voltar"
                         )
                     }
                 }
-            }
-            // Indicador de que o conteúdo foi traduzido
-            if (post.titlePt != null) {
-                Spacer(modifier = Modifier.height(8.dp))
-                Text(
-                    text = "✓ Conteúdo traduzido do inglês",
-                    style = MaterialTheme.typography.bodySmall,
-                    color = BLACK.copy(alpha = 0.5f)
-                )
-            }
+            )
         }
-    } ?: Box(
-        modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
-    ) {
-        MeuLoading()
+    ) { padding ->
+
+
+        post?.let { post ->
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(padding)
+                    .padding(16.dp)
+            ) {
+
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 16.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    IconButton(
+                        onClick = onBackClick
+                    ) {
+                        Icon(
+                            Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = "Voltar",
+                            tint = BLACK
+                        )
+                    }
+
+                    Text(
+                        text = "Detalhes da Postagem",
+                        style = MaterialTheme.typography.headlineMedium.copy(fontWeight = FontWeight.Bold),
+                        color = BLACK
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(8.dp))
+
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 4.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = "Usuário: ${post.userId}",
+                        style = MaterialTheme.typography.titleLarge,
+                        color = BLACK
+                    )
+
+                    Surface(
+                        color = BLACK,
+                        shape = RoundedCornerShape(12.dp)
+                    ) {
+                        Text(
+                            text = "Postagem ID: ${post.id}",
+                            style = MaterialTheme.typography.titleMedium,
+                            color = WHITE,
+                            modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
+                        )
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                Text(
+                    text = post.displayTitle,
+                    style = MaterialTheme.typography.headlineSmall,
+                    color = BLACK,
+                    modifier = Modifier.padding(vertical = 4.dp)
+                )
+
+                Spacer(modifier = Modifier.height(8.dp))
+
+                Text(
+                    text = post.displayBody.replace("\n", "\n\n"),
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = BLACK,
+                    textAlign = TextAlign.Justify
+                )
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(16.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Visualizacoes(
+                        visualizacoes = post.views,
+                    )
+
+                    Like(
+                        likes = post.reactions.likes,
+                    )
+
+                    Dislike(
+                        dislikes = post.reactions.dislikes,
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                Text("Tags:", style = MaterialTheme.typography.titleMedium)
+                Spacer(modifier = Modifier.height(8.dp))
+                LazyRow(
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    items(post.displayTags) { tag ->
+                        Surface(
+                            color = WHITE,
+                            shape = RoundedCornerShape(16.dp),
+                            border = BorderStroke(1.dp, BLACK),
+                            modifier = Modifier.padding(vertical = 2.dp)
+                        ) {
+                            Text(
+                                text = tag.uppercase(Locale.ROOT),
+                                color = BLACK,
+                                modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp),
+                                style = MaterialTheme.typography.bodySmall
+                            )
+                        }
+                    }
+                }
+                // Indicador de que o conteúdo foi traduzido
+                if (post.titlePt != null) {
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Text(
+                        text = "✓ Conteúdo traduzido do inglês",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = BLACK.copy(alpha = 0.5f)
+                    )
+                }
+            }
+        } ?: Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ) {
+            MeuLoading()
+        }
+
     }
 
+
+    @Composable
+    fun PostDetailScreenPreview() {
+        PostDetailScreen(
+            id = 3,
+            onBackClick = {}
+        )
+    }
 }
 
-@Preview
-@Composable
-private fun PostDetailScreenPreview() {
-    PostDetailScreen(
-        id = 3,
-        onBackClick = {}
-    )
+private fun Nothing?.popBackStack() {
+    TODO("Not yet implemented")
 }
