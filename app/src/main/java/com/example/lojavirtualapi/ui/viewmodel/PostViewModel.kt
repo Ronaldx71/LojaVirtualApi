@@ -77,8 +77,4 @@ class PostViewModel : ViewModel() {
         _searchQuery.value = _searchQuery.value
     }
 
-    override fun onCleared() {
-        super.onCleared()
-        translationManager.close()
-    }
 }
