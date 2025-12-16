@@ -49,4 +49,9 @@ interface DummyApi {
         @Query("skip") skip: Int = 0
     ): PostResponse
 
+    @GET("products/search")
+    suspend fun searchProducts(
+        @Query("q") query: String
+    ): ProductResponse
+
 }
