@@ -24,11 +24,26 @@ fun ProductListScreen(nav: NavController) {
     var list by remember { mutableStateOf<List<Product>>(emptyList()) }
     var loading by remember { mutableStateOf(true) }
 
-    LaunchedEffect(Unit) {
-        val response = RetrofitInstance.api.getProducts()
+    // ✅ searchText precisa ser estado e NÃO pode ser null
+    var searchText by remember { mutableStateOf("") }
+
+    // ✅ LaunchedEffect deve observar searchText
+    LaunchedEffect(searchText) {
+        loading = true
+
+        val response = if (searchText.isBlank()) {
+            RetrofitInstance.api.getProducts()
+        } else {
+            RetrofitInstance.api.searchProducts(searchText)
+        }
+
         list = response.products
         loading = false
     }
+
+
+
+
 
     if (loading) {
         Box(

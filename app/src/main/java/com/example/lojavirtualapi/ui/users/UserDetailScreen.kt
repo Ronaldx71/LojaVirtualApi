@@ -1,85 +1,84 @@
 package com.example.lojavirtualapi.ui.users
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.example.lojavirtualapi.api.RetrofitInstance
 import com.example.lojavirtualapi.model.User
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun UserDetailScreen(id: Int, nav: NavController) {
+fun UserDetailScreen(
+    id: Int,
+    onBackClick: () -> Unit
+) {
 
     var user by remember { mutableStateOf<User?>(null) }
     var loading by remember { mutableStateOf(true) }
 
-    // ---- CHAMADA DA API ----
     LaunchedEffect(id) {
-        val response = RetrofitInstance.api.getUser(id)
-        user = response
+        user = RetrofitInstance.api.getUser(id)
         loading = false
     }
 
-    // ---- LOADING ----
     if (loading) {
-        Box(
-            modifier = Modifier.fillMaxSize(),
-            contentAlignment = Alignment.Center
-        ) {
+        Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
             CircularProgressIndicator()
         }
         return
     }
 
-    // ---- SE DER ERRO ----
     val u = user ?: return
 
-    // ---- LAYOUT BÁSICO PARA A EQUIPE COMPLETAR ----
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp)
-    ) {
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = { Text("Detalhe do Usuário") },
+                navigationIcon = {
+                    IconButton(onClick = onBackClick) {
+                        Icon(Icons.Default.ArrowBack, contentDescription = "Voltar")
+                    }
+                }
+            )
+        }
+    ) { padding ->
 
-        // Foto do usuário
-        AsyncImage(
-            model = u.image,
-            contentDescription = null,
+        Column(
             modifier = Modifier
-                .size(150.dp)
-                .align(Alignment.CenterHorizontally)
-        )
+                .fillMaxSize()
+                .padding(padding)
+                .padding(16.dp)
+        ) {
 
-        Spacer(Modifier.height(16.dp))
+            AsyncImage(
+                model = u.image,
+                contentDescription = null,
+                modifier = Modifier
+                    .size(150.dp)
+                    .align(Alignment.CenterHorizontally)
+            )
 
-        Text(text = "${u.firstName} ${u.lastName}", style = MaterialTheme.typography.titleLarge)
-        Text(text = u.email, style = MaterialTheme.typography.bodyMedium)
-        Text(text = "Idade: ${u.age}")
-        Text(text = "Telefone: ${u.phone}")
-        Text(text = "Cidade: ${u.address.city}")
-        Text(text = "País: ${u.address.country}")
+            Spacer(Modifier.height(16.dp))
 
-        Spacer(Modifier.height(24.dp))
+            Text("${u.firstName} ${u.lastName}", style = MaterialTheme.typography.titleLarge)
+            Text(u.email)
+            Text("Idade: ${u.age}")
+            Text("Telefone: ${u.phone}")
+            Text("Cidade: ${u.address.city}")
+            Text("País: ${u.address.country}")
 
-        // ---- ÁREA PARA A EQUIPE COMPLETAR ----
-        Text(
-            text = "Informações adicionais:",
-            style = MaterialTheme.typography.titleMedium
-        )
+            Spacer(Modifier.height(24.dp))
 
-        // EXEMPLO DE CAMPOS
-        Text("Universidade: ${u.university}")
-        Text("Empresa: ${u.company.name}")
-        Text("Cargo: ${u.company.title}")
-
-        Spacer(Modifier.height(24.dp))
-
-        Button(onClick = { nav.popBackStack() }) {
-            Text("Voltar")
+            Text("Informações adicionais:", style = MaterialTheme.typography.titleMedium)
+            Text("Universidade: ${u.university}")
+            Text("Empresa: ${u.company.name}")
+            Text("Cargo: ${u.company.title}")
         }
     }
 }

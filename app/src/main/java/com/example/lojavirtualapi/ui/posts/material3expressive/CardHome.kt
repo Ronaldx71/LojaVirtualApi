@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
-import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CardDefaults
@@ -29,8 +28,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.danilloteles.appnetflixapi.ui.theme.GRAY_300
 import com.danilloteles.appnetflixapi.ui.theme.GRAY_500
-import com.danilloteles.appnetflixapi.ui.theme.GRAY_700
-import com.danilloteles.appnetflixapi.ui.theme.GRAY_900
 
 @Composable
 fun CardHome(
@@ -43,7 +40,7 @@ fun CardHome(
         modifier = modifier.fillMaxWidth(),
         border = BorderStroke(1.dp, GRAY_500),
         colors = CardDefaults.outlinedCardColors(
-            containerColor = Color.White
+            containerColor = MaterialTheme.colorScheme.primaryContainer
         )
     ) {
         Column(
