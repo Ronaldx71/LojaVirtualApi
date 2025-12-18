@@ -2,22 +2,22 @@ package com.example.lojavirtualapi.ui.products
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.Alignment
-import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.example.lojavirtualapi.api.RetrofitInstance
 import com.example.lojavirtualapi.model.Product
 
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ProductDetailScreen(id: Int, nav: NavController) {
-
+fun ProductDetailScreen(
+    id: Int,
+    onBackClick: () -> Unit
+) {
     var product by remember { mutableStateOf<Product?>(null) }
 
     LaunchedEffect(id) {
@@ -27,13 +27,11 @@ fun ProductDetailScreen(id: Int, nav: NavController) {
     Scaffold(
         topBar = {
             TopAppBar(
-                title = {
-                    Text("Detalhe do Usuário")
-                },
+                title = { Text("Detalhe do Produto") },
                 navigationIcon = {
-                    IconButton(onClick = { nav.popBackStack() }) {
+                    IconButton(onClick = onBackClick) {
                         Icon(
-                            imageVector = Icons.Default.ArrowBack,
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = "Voltar"
                         )
                     }
