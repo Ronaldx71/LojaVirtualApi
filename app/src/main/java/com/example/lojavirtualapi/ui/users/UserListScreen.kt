@@ -11,7 +11,7 @@ import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.example.lojavirtualapi.api.RetrofitInstance
 import com.example.lojavirtualapi.model.User
-
+@Suppress("Unused")
 @Composable
 fun UsersListScreen(nav: NavController) {
 
