@@ -13,6 +13,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.danilloteles.appnetflixapi.ui.theme.BLACK
 import com.danilloteles.appnetflixapi.ui.theme.WHITE
@@ -40,7 +41,7 @@ fun PostDetailScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Detalhe do Post") },
+                title = { Text("Detalhe da Postagem") },
                 navigationIcon = {
                     IconButton(onClick = onBackClick) {
                         Icon(
@@ -60,6 +61,34 @@ fun PostDetailScreen(
                     .padding(padding)
                     .padding(16.dp)
             ) {
+
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 4.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = "Usuário: ${post.userId}",
+                        style = MaterialTheme.typography.titleLarge,
+                        color = BLACK
+                    )
+
+                    Surface(
+                        color = BLACK,
+                        shape = RoundedCornerShape(12.dp)
+                    ) {
+                        Text(
+                            text = "Postagem ID: ${post.id}",
+                            style = MaterialTheme.typography.titleMedium,
+                            color = WHITE,
+                            modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
+                        )
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(16.dp))
 
                 Text(
                     text = post.displayTitle,
@@ -124,4 +153,13 @@ fun PostDetailScreen(
             MeuLoading()
         }
     }
+}
+
+@Preview
+@Composable
+private fun PostDetailScreenPreview(){
+    PostDetailScreen(
+        id = 1,
+        onBackClick = {}
+    )
 }
