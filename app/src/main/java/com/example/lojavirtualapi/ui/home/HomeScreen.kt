@@ -1,24 +1,17 @@
 package com.example.lojavirtualapi.ui.home
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.lojavirtualapi.ui.posts.material3expressive.CardHome
-import com.example.lojavirtualapi.ui.posts.material3expressive.MeuCard
+
 
 @Composable
 fun HomeScreen(nav: NavController) {
@@ -27,8 +20,7 @@ fun HomeScreen(nav: NavController) {
         modifier = Modifier.fillMaxSize(),
         color = MaterialTheme.colorScheme.background
     ) {
-
-    LazyVerticalGrid(
+        LazyVerticalGrid(
             columns = GridCells.Fixed(2),
             modifier = Modifier
                 .fillMaxSize()
@@ -37,7 +29,7 @@ fun HomeScreen(nav: NavController) {
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             items(4) { item ->
-                when (item){
+                when (item) {
                     0 -> CardHome(
                         onClick = { nav.navigate("products") },
                         title = "Produtos"
@@ -45,13 +37,11 @@ fun HomeScreen(nav: NavController) {
                     1 -> CardHome(
                         onClick = { nav.navigate("carts") },
                         title = "Carrinho"
-
                     )
                     2 -> CardHome(
                         onClick = { nav.navigate("users") },
                         title = "Usuários"
                     )
-
                     3 -> CardHome(
                         onClick = { nav.navigate("posts") },
                         title = "Postagens"
@@ -62,8 +52,3 @@ fun HomeScreen(nav: NavController) {
     }
 }
 
-@Preview
-@Composable
-private fun HomeScreenPreview(){
-    HomeScreen(nav = NavController(LocalContext.current))
-}
